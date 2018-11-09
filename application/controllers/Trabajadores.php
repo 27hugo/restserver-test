@@ -4,20 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH . '/libraries/REST_Controller.php';
 
 
-class Empresas extends REST_Controller
+class Trabajadores extends REST_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('empresas_model');
+        $this->load->model('trabajadores_model');
     }
 
     public function index_get()
     {
-        $empresas = $this->empresas_model->get();
+        $trabajadores = $this->trabajadores_model->get();
 
-        if (!is_null($empresas)) {
-            $this->response($empresas, REST_Controller::HTTP_OK); 
+        if (!is_null($trabajadores)) {
+            $this->response($trabajadores, REST_Controller::HTTP_OK); 
 
         } else {
             $this->response(array('error' => 'No hay ciudades en la base de datos...'), 404);
@@ -27,23 +27,20 @@ class Empresas extends REST_Controller
 	if(!$id){
 		$this->response(null,400);
 	}
-	$empresa = $this->empresas_model->get($id);
-	if(!is_null($empresa)){
-		$this->response(array('response' => $empresa) , 200);
+	$trabajador = $this->trabajadores_model->get($id);
+	if(!is_null($trabajador)){
+		$this->response(array('response' => $trabajador) , 200);
 	}else{
-		$this->response(array('error' => 'Empresa no encontrada...'),404);
+		$this->response(array('error' => 'trabajador no encontrada...'),404);
 	}
     }
 
     public function create_post(){
-	$empresa = array (
-		'emp_nombre' => $this->post('emp_nombre'),
-		'emp_cantidad_tra' => $this->post('emp_cantidad_tra')
-	);
-	if (!$this->post('emp_nombre')) {
+	$trabajador = array ('tra_nombre' => $this->post('tra_nombre'));
+	if (!$this->post('tra_nombre')) {
 		$this->response ( null , 400) ;
 	}else{
-		$status = $this-> empresas_model->save( $empresa );
+		$status = $this-> trabajadores_model->save( $trabajador );
 		if ( $status == null ) {
 			$this->response ( array ('response' => 'Sin crear') , 400) ;
 		}
@@ -52,15 +49,11 @@ class Empresas extends REST_Controller
     }
 
     public function update_put (){
-	$empresa = array (
-		'emp_id' => $this->put('emp_id') ,
-		'emp_nombre' => $this->put('emp_nombre'),
-		'emp_cantidad_tra' => $this->put('emp_cantidad_tra')
-	);
-	if (!$this->put('emp_id')) {
+	$city = array ('id' => $this->put('id') ,'tra_nombre' => $this->put('tra_nombre')) ;
+	if (!$this->put('id')) {
 		$this->response(null,400);
 	}else{
-		$status = $this->empresas_model->update($empresa);
+		$status = $this->cities_model->update($city);
 		if ( is_null ( $status ) ) {
 		$this->response( array ( 'response' => 'Sin actualizar') , 400) ;
 	}
@@ -72,7 +65,7 @@ class Empresas extends REST_Controller
 		if(!$id){
 			$this->response(null,400);
 		}
-		$status = $this->empresas_model->delete( $id ) ;
+		$status = $this->trabajadores_model->delete( $id ) ;
 		if (!is_null($status)){
 			$this->response( array( 'response' => 'Ciudad eliminada!') , 200) ;
 		} else {
